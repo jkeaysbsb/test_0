@@ -25,21 +25,22 @@ import { RHFDateTimePicker } from '../../components/RHFDateTimePicker';
 import { RHFRadioGroup } from '../../components/RHFRadioGroup';
 import { RHFSlider } from '../../components/RHFSlider';
 import { RHFSwitch } from '../../components/RHFSwitch';
+
 import { RHFTextField } from '../../components/RHFTextField';
 import { RHFToggleButtonGroup } from '../../components/RHFToggleButtonGroup';
 import { useCreateUser, useEditUser } from '../services/mutations';
-import {
+import { 
 	useGenders,
 	useLanguages,
 	useSkills,
-	useStates,
+	useRegions,
 	useUser,
 	useUsers,
 } from '../services/queries';
 import { defaultValues, Schema } from '../types/schema';
 
 export function Users() {
-	const statesQuery = useStates();
+	const regionsQuery = useRegions();
 	const languagesQuery = useLanguages();
 	const gendersQuery = useGenders();
 	const skillsQuery = useSkills();
@@ -61,23 +62,47 @@ export function Users() {
 		return () => sub.unsubscribe();
 	}, [watch]);
 
-	const isTeacher = useWatch({ control, name: 'isTeacher' });
+	const isSituationOption = useWatch({ control, name: 'isSituationOption' });
+	const isGoalOption = useWatch({ control, name: 'isGoalOption' });
+	const isActionOption = useWatch({ control, name: 'isActionOption' });
+	const isResultOption = useWatch({ control, name: 'isResultOption' });
 
 	const { append, fields, remove, replace } = useFieldArray({
 		control,
-		name: 'students',
-	});
+		name: 'situations'	});
 
+	
 	const handleUserClick = (id: string) => {
 		setValue('id', id);
 	};
 
 	useEffect(() => {
-		if (!isTeacher) {
+		if (!isSituationOption) {
 			replace([]);
-			unregister('students');
+			unregister('situations');
 		}
-	}, [isTeacher, replace, unregister]);
+	}, [isSituationOption, replace, unregister]);
+
+	useEffect(() => {
+		if (!isGoalOption) {
+			replace([]);
+			unregister('goal');
+		}
+	}, [isGoalOption, replace, unregister]);
+
+	useEffect(() => {
+		if (!isActionOption) {
+			replace([]);
+			unregister('action');
+		}
+	}, [isActionOption, replace, unregister]);
+
+	useEffect(() => {
+		if (!isResultOption) {
+			replace([]);
+			unregister('result');
+		}
+	}, [isResultOption, replace, unregister]);
 
 	useEffect(() => {
 		if (userQuery.data) {
@@ -86,6 +111,7 @@ export function Users() {
 	}, [reset, userQuery.data]);
 
 	const handleReset = () => {
+
 		reset(defaultValues);
 	};
 
@@ -102,7 +128,13 @@ export function Users() {
 	return (
 		<Container maxWidth="sm" component="form" onSubmit={handleSubmit(onSubmit)}>
 			<Stack sx={{ flexDirection: 'row', gap: 2 }}>
-				<List subheader={<ListSubheader>Users</ListSubheader>}>
+			<List subheader={<ListSubheader>Menu</ListSubheader>}>
+					
+						<ListItem>1. Back</ListItem>
+						
+						
+				</List>
+				<List subheader={<ListSubheader>Submissions</ListSubheader>}>
 					{usersQuery.data?.map((user) => (
 						<ListItem disablePadding key={user.id}>
 							<ListItemButton
@@ -116,12 +148,147 @@ export function Users() {
 				</List>
 
 				<Stack sx={{ gap: 2 }}>
+					
+				<RHFDateTimePicker<Schema>
+						name="registrationDateAndTime"
+						label="Date"
+						
+					/>
+					
 					<RHFTextField<Schema> name="name" label="Name" />
 					<RHFTextField<Schema> name="email" label="Email" />
+						<div className='submissionContent'>
+					<Typography>Content for Submission:</Typography>
+					<RHFSwitch<Schema> name="isSituationOption" label="Situation/Context" />
+
+					
+
+{fields.map((field, index) => (
+	<Fragment key={field.id}>
+		<RHFTextField<Schema> multiline rows={5}
+			name={`situations.${index}.name`}
+			label="Situation"
+		/>
+		<Button
+			color="error"
+			onClick={() => {
+				remove(index);
+			}}
+			type="button"
+		>
+			Remove Situation/Context
+		</Button>
+	</Fragment>
+))}
+{isSituationOption && (
+	
+	<Button onClick={() => append({ name: 'situationClick' })} type="button">
+		Add Situation/Context
+	</Button>
+		
+)}
+
+<RHFSwitch<Schema> name="isGoalOption" label="Goal/Context" />
+
+					
+
+{fields.map((field, index) => (
+	<Fragment key={field.id}>
+		<RHFTextField<Schema> multiline rows={5}
+			name={`goals.${index}.name`}
+			label="Goal"
+		/>
+		<Button
+			color="error"
+			onClick={() => {
+				remove(index);
+			}}
+			type="button"
+		>
+			Remove Goal/Objective
+		</Button>
+	</Fragment>
+))}
+{isGoalOption && (
+	
+	<Button onClick={() => append({ name: '' })} type="button">
+		Add Goal/Objective
+	</Button>
+		
+)}
+
+<RHFSwitch<Schema> name="isActionOption" label="Action Taken" />
+
+					
+
+{fields.map((field, index) => (
+	<Fragment key={field.id}>
+		<RHFTextField<Schema> multiline rows={5}
+			name={`actions.${index}.name`}
+			label="Action"
+		/>
+		<Button
+			color="error"
+			onClick={() => {
+				remove(index);
+			}}
+			type="button"
+		>
+			Remove Action
+		</Button>
+	</Fragment>
+))}
+{isActionOption && (
+	
+	<Button onClick={() => append({ name: '' })} type="button">
+		Add Action
+	</Button>
+		
+)}
+
+
+
+<RHFSwitch<Schema> name="isResultOption" label="Result" />
+
+					
+
+{fields.map((field, index) => (
+	<Fragment key={field.id}>
+		<RHFTextField<Schema> multiline rows={5}
+			name={`results.${index}.name`}
+			label="Results"
+		/>
+		<Button
+			color="error"
+			onClick={() => {
+				remove(index);
+			}}
+			type="button"
+		>
+			Remove Result
+		</Button>
+	</Fragment>
+))}
+{isResultOption && (
+	
+	<Button onClick={() => append({ name: '' })} type="button">
+		Add Result
+	</Button>
+		
+)}
+
+
+
+
+</div>
+
+
+
+					
 					<RHFAutocomplete<Schema>
-						name="states"
-						label="States"
-						options={statesQuery.data}
+						name="regions"
+						label="Region(s)"
+						options={regionsQuery.data}
 					/>
 					<RHFToggleButtonGroup<Schema>
 						name="languagesSpoken"
@@ -130,54 +297,32 @@ export function Users() {
 					<RHFRadioGroup<Schema>
 						name="gender"
 						options={gendersQuery.data}
-						label="Gender"
+						label="Privacy"
 					/>
+					<Typography>*Admins may have to access when necessary</Typography>
 					<RHFCheckbox<Schema>
 						name="skills"
 						options={skillsQuery.data}
-						label="Skills"
+						label="Type"
 					/>
+					<RHFTextField<Schema> name="content" multiline rows={2} label="Notes" />
+					
 
-					<RHFDateTimePicker<Schema>
-						name="registrationDateAndTime"
-						label="Registration Date & Time"
-					/>
-					<Typography>Former Employment Period:</Typography>
-					<RHFDateRangePicker<Schema> name="formerEmploymentPeriod" />
-					<RHFSlider<Schema> name="salaryRange" label="Salary Range" />
-					<RHFSwitch<Schema> name="isTeacher" label="Are you a teacher?" />
-
-					{isTeacher && (
-						<Button onClick={() => append({ name: '' })} type="button">
-							Add new student
-						</Button>
-					)}
-
-					{fields.map((field, index) => (
-						<Fragment key={field.id}>
-							<RHFTextField<Schema>
-								name={`students.${index}.name`}
-								label="Name"
-							/>
-							<Button
-								color="error"
-								onClick={() => {
-									remove(index);
-								}}
-								type="button"
-							>
-								Remove
-							</Button>
-						</Fragment>
-					))}
+					
+					
+					
+					
 
 					<Stack sx={{ flexDirection: 'row', justifyContent: 'space-between' }}>
 						<Button variant="contained" type="submit">
-							{variant === 'create' ? 'New user' : 'Edit user'}
+							{variant === 'create' ? 'Submit' : 'Edit/Update'}
 						</Button>
-						<Button onClick={handleReset}>Reset</Button>
+						<Button onClick={handleReset}>Clear</Button>
 					</Stack>
+				
 				</Stack>
+				
+
 			</Stack>
 		</Container>
 	);

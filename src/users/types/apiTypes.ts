@@ -10,15 +10,19 @@ type Edit = {
 export type ApiCommon = {
 	email: string;
 	name: string;
-	states: string[];
+	content: string;
+	regions: string[];
 	gender: string;
 	languagesSpoken: string[];
 	skills: string[];
 	registrationDateAndTime: string;
 	formerEmploymentPeriod: [string, string];
 	salaryRange: [number, number];
-	isTeacher: boolean;
-	students: {
+	isSituation: boolean;
+	situations: {
+		name: string;
+	isGoal: boolean;
+	goals: {
 		name: string;
 	}[];
 };

@@ -54,8 +54,7 @@ export function RHFAutocomplete<T extends FieldValues>({
 								icon={<CheckBoxOutlineBlankIcon />}
 								checkedIcon={<CheckBoxIcon />}
 								checked={selected}
-							/>
-							{option.label}
+							/>                                                {option.label}
 						</Box>
 					)}
 				/>

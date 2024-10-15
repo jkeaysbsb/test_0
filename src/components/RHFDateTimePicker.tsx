@@ -9,10 +9,11 @@ type Props<T extends FieldValues> = {
 };
 
 export function RHFDateTimePicker<T extends FieldValues>({
+	
 	name,
 	label,
 }: Props<T>) {
-	const { control } = useFormContext<T>();
+	const { control } = useFormContext<T>(); 
 
 	return (
 		<Controller
@@ -23,6 +24,7 @@ export function RHFDateTimePicker<T extends FieldValues>({
 					<DateTimePicker label={label} {...field} />
 				</LocalizationProvider>
 			)}
+			
 		/>
 	);
 }

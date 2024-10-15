@@ -14,9 +14,13 @@ export function mapData(data: Schema): ApiCreateEdit {
 		registrationDateAndTime: data.registrationDateAndTime.toString(),
 		salaryRange: [data.salaryRange[0], data.salaryRange[1]],
 		skills: data.skills,
-		states: data.states,
-		isTeacher: data.isTeacher,
-		students: data.isTeacher === true ? data.students : [],
+		regions: data.regions,
+		isSituation: data.isSituationOption,
+		situation: data.isSituationOption=== true ? data.situations : [],
+		isGoal: data.isGoal,
+		goal: data.isGoalOption=== true ? data.goal : [],
+		isSituation: data.isSituationOption,
+		situation: data.isSituationOption=== true ? data.situations : [],
 	};
 
 	switch (data.variant) {

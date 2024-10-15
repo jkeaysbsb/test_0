@@ -6,12 +6,12 @@ import { Option } from '../../types/option';
 import { ApiGet } from '../types/apiTypes';
 import { Schema } from '../types/schema';
 
-export function useStates() {
+export function useRegions() {
 	return useQuery({
-		queryKey: ['states'],
+		queryKey: ['regions'],
 		queryFn: () =>
 			axios
-				.get<Option[]>('http://localhost:8080/states')
+				.get<Option[]>('http://localhost:8080/regions')
 				.then((res) => res.data),
 	});
 }
@@ -53,7 +53,7 @@ export function useUsers() {
 			axios.get<ApiGet[]>('http://localhost:8080/users').then((response) =>
 				response.data.map((user) => ({
 					id: user.id.toString(),
-					label: user.name,
+					label: user.registrationDateAndTime,
 				}))
 			),
 	});
@@ -70,8 +70,10 @@ export function useUser(id: string) {
 			return {
 				variant: 'edit',
 				id: data.id.toString(),
+				
 				name: data.name,
 				email: data.email,
+				content: data.content,
 				formerEmploymentPeriod: [
 					new Date(data.formerEmploymentPeriod[0]),
 					new Date(data.formerEmploymentPeriod[1]),
@@ -81,9 +83,11 @@ export function useUser(id: string) {
 				registrationDateAndTime: new Date(data.registrationDateAndTime),
 				salaryRange: [data.salaryRange[0], data.salaryRange[1]],
 				skills: data.skills,
-				states: data.states,
-				students: data.students,
-				isTeacher: data.isTeacher,
+				regions: data.regions,
+				situations: data.situation,
+				isSituationOption: data.isSituation,
+				goals: data.goal,
+				isGoalOption: data.isGoal,
 			};
 		},
 		enabled: !!id,

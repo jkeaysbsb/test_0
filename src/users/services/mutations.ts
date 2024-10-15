@@ -19,7 +19,7 @@ export function useCreateUser() {
 
 		onSuccess: async () => {
 			await queryClient.invalidateQueries({ queryKey: ['users'] });
-			alert('User created!');
+			alert('Submitted!');
 		},
 	});
 }

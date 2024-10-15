@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 import { patterns } from '../../constants';
-
+const minChar=50;
+const maxChar=250;
 export const schema = z
 	.intersection(
 		z.object({
@@ -12,7 +13,10 @@ export const schema = z
 				.refine((text) => patterns.email.test(text), {
 					message: 'Email not valid',
 				}),
-			states: z.array(z.string()).min(1).max(2),
+			content: z.string()
+					.min(0,{message: ''})
+					.max(500,{message: ''}),
+			regions: z.array(z.string()).min(1).max(4),
 			languagesSpoken: z.array(z.string()),
 			gender: z.string().min(1),
 			skills: z.array(z.string()).max(2),
@@ -28,31 +32,71 @@ export const schema = z
 	)
 	.and(
 		z.union([
-			z.object({ isTeacher: z.literal(false) }),
+			z.object({ isSituationOption: z.literal(false) }),
 			z.object({
-				isTeacher: z.literal(true),
+				isSituationOption: z.literal(true),
 
-				students: z.array(
+				situations: z.array(
 					z.object({
 						name: z.string().min(4),
 					})
 				),
 			}),
 		])
-	);
+	).and(
+		z.union([
+			z.object({ isGoalOption: z.literal(false) }),
+			z.object({
+				isGoalOption: z.literal(true),
+
+				goals: z.array(
+					z.object({
+						name: z.string().min(minChar).max(maxChar),
+					})
+				),
+			}),
+		])).and(
+			z.union([
+				z.object({ isActionOption: z.literal(false) }),
+				z.object({
+					isActionOption: z.literal(true),
+	
+					actions: z.array(
+						z.object({
+							name: z.string().min(4),
+						})
+					),
+				}),
+			])).and(
+				z.union([
+					z.object({ isResultOption: z.literal(false) }),
+					z.object({
+						isResultOption: z.literal(true),
+		
+						results: z.array(
+							z.object({
+								name: z.string().min(4),
+							})
+						),
+					}),
+				]));
 
 export type Schema = z.infer<typeof schema>;
 
 export const defaultValues: Schema = {
 	variant: 'create',
-	email: '',
-	name: '',
-	states: [],
+	email: 'joseph.keays@sky.uk',
+	name: 'demo_account',
+	content:'',
+	regions: [],
 	languagesSpoken: [],
 	gender: '',
 	skills: [],
 	registrationDateAndTime: new Date(),
 	formerEmploymentPeriod: [new Date(), new Date()],
 	salaryRange: [0, 2000],
-	isTeacher: false,
+	isSituationOption: true,
+	isGoalOption: true,
+	isActionOption: true,
+	isResultOption: true,
 };
